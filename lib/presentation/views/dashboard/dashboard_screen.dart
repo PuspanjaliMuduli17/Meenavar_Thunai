@@ -13,6 +13,7 @@ import '../../../core/widgets/fishing_ban_indicator.dart';
 import '../../../core/services/fishing_ban_service.dart';
 import '../sustainable_products/sustainable_prod_screen.dart';
 import '../profile/profile_screen.dart';
+import '../../../app/routes.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -83,6 +84,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
             ),
           ],
         ),
+        floatingActionButton: FloatingActionButton(
+  onPressed: () {
+    Navigator.pushNamed(context, AppRoutes.chat);
+  },
+  backgroundColor: Colors.blue.shade800,
+  child: const Icon(Icons.chat),
+),
+
         body: SingleChildScrollView(
           padding: const EdgeInsets.all(16.0),
           child: Column(

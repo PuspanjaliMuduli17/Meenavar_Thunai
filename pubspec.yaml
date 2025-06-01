@@ -4,11 +4,15 @@ publish_to: 'none'
 
 version: 1.0.0+1
 environment:
-  sdk: ^3.7.0
+  sdk: '>=3.0.0 <4.0.0'
+  flutter: ">=3.0.0"
 
 dependencies:
   flutter:
     sdk: flutter
+  flutter_markdown: ^0.6.18
+  flutter_dotenv: ^5.1.0
+  google_generative_ai: ^0.4.3
 
   # State Management
   provider: ^6.0.5
@@ -57,4 +61,6 @@ flutter:
     - assets/images/
     - assets/animations/
     - assets/india_eez.geojson
+    - .env 
+
 

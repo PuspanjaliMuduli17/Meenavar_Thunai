@@ -10,6 +10,8 @@ import '/presentation/viewmodels/auth_viewmodel.dart';
 import '/presentation/views/splash_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import '/presentation/viewmodels/fish_catch_viewmodel.dart';
+import '../providers/chat_provider.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -25,6 +27,7 @@ void main() async {
 
   // Setup service locator
   await setupLocator();
+  await dotenv.load();
 
   runApp(const MyApp());
 }
@@ -39,6 +42,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => locator<AuthViewModel>()),
         ChangeNotifierProvider(create: (_) => MapsViewModel()),
         ChangeNotifierProvider(create: (context) => FishCatchViewModel()),
+        ChangeNotifierProvider(create: (_) => ChatProvider()),
       ],
       child: MaterialApp(
         title: 'Meenavar-Thunai',
