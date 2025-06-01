@@ -1,19 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:meenavar_thunai/presentation/views/weather/weather_widget.dart';
-import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:provider/provider.dart';
+
+import '../../../app/routes.dart';
+import '../../../core/services/fishing_ban_service.dart';
+import '../../../core/widgets/alerts_widget.dart';
+import '../../../core/widgets/fishing_ban_indicator.dart';
 import '../../../theme/app_colors.dart';
 import '../../../theme/app_styles.dart';
 import '../../viewmodels/auth_viewmodel.dart';
-import '../../../core/widgets/alerts_widget.dart';
-import '../map/map_screen.dart';
 import '../catch_log/fish_catch_screen.dart';
-import '../../../core/widgets/fishing_ban_indicator.dart';
-import '../../../core/services/fishing_ban_service.dart';
-import '../sustainable_products/sustainable_prod_screen.dart';
+import '../map/map_screen.dart';
 import '../profile/profile_screen.dart';
-import '../../../app/routes.dart';
+import '../sustainable_products/sustainable_prod_screen.dart';
+import '../weather/weather_widget.dart';
+// Import the enhanced LastTripSummary widget
+import 'package:meenavar_thunai/core/widgets/last_trip_summary_widget.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -24,12 +27,6 @@ class DashboardScreen extends StatefulWidget {
 
 class _DashboardScreenState extends State<DashboardScreen> {
   int _currentIndex = 0;
-  final List<Widget> _screens = [];
-
-  @override
-  void initState() {
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,13 +36,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
     final isFishingBanActive = FishingBanService.isBanActive();
 
     return WillPopScope(
-      // Prevent back button navigation from dashboard
       onWillPop: () async => false,
       child: Scaffold(
         appBar: AppBar(
           elevation: 0,
           backgroundColor: Colors.transparent,
-          automaticallyImplyLeading: false, // Remove back button
+          automaticallyImplyLeading: false,
           title: Text(
             'Meenavar Thunai',
             style: AppStyles.titleLarge.copyWith(
@@ -55,10 +51,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           ),
           actions: [
             IconButton(
-              icon: Icon(
-                Icons.notifications_outlined,
-                color: AppColors.textDark,
-              ),
+              icon: Icon(Icons.notifications_outlined, color: AppColors.textDark),
               onPressed: () {},
             ),
             IconButton(
@@ -76,21 +69,20 @@ class _DashboardScreenState extends State<DashboardScreen> {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(
-                    builder: (context) => const ProfileScreen(),
-                  ),
+                  MaterialPageRoute(builder: (context) => const ProfileScreen()),
                 );
               },
             ),
           ],
         ),
+
         floatingActionButton: FloatingActionButton(
-  onPressed: () {
-    Navigator.pushNamed(context, AppRoutes.chat);
-  },
-  backgroundColor: Colors.blue.shade800,
-  child: const Icon(Icons.chat),
-),
+          onPressed: () {
+            Navigator.pushNamed(context, AppRoutes.chat);
+          },
+          backgroundColor: Colors.blue.shade800,
+          child: const Icon(Icons.chat),
+        ),
 
         body: SingleChildScrollView(
           padding: const EdgeInsets.all(16.0),
@@ -100,30 +92,32 @@ class _DashboardScreenState extends State<DashboardScreen> {
               Row(
                 children: [
                   Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Welcome${user?.displayName != null ? ', ${user!.displayName}' : ''}',
-                          style: AppStyles.headlineSmall.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
+                    child: Text(
+                      'Welcome${user?.displayName != null ? ', ${user!.displayName}' : ''}',
+                      style: AppStyles.headlineSmall.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ],
               ),
               const SizedBox(height: 24),
+              
               const AlertsWidget(),
               const SizedBox(height: 24),
+              
               const WeatherWidget(),
               const SizedBox(height: 24),
+              
               const FishingBanIndicator(),
               const SizedBox(height: 24),
+
+              // Enhanced Last Trip Summary Widget
+              const LastTripSummary(),
             ],
           ),
         ),
+
         bottomNavigationBar: BottomNavigationBar(
           currentIndex: _currentIndex,
           selectedItemColor: AppColors.primary,
@@ -135,25 +129,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
               return;
             }
 
-            setState(() {
-              _currentIndex = index;
-            });
+            setState(() => _currentIndex = index);
 
-            if (index == 0) {
-              return;
-            } else if (index == 1) {
+            if (index == 1) {
               Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (context) => const MapsScreen(),
                   settings: const RouteSettings(name: 'MapsScreen'),
                 ),
-              ).then((_) {
-                // Reset index to 0 when returning to dashboard
-                setState(() {
-                  _currentIndex = 0;
-                });
-              });
+              ).then((_) => setState(() => _currentIndex = 0));
             } else if (index == 2) {
               Navigator.push(
                 context,
@@ -161,27 +146,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   builder: (context) => const FishCatchScreen(),
                   settings: const RouteSettings(name: 'FishCatchScreen'),
                 ),
-              ).then((_) {
-                // Reset index to 0 when returning to dashboard
-                setState(() {
-                  _currentIndex = 0;
-                });
-              });
+              ).then((_) => setState(() => _currentIndex = 0));
             } else if (index == 3) {
               Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (context) => const SustainableProductsScreen(),
-                  settings: const RouteSettings(
-                    name: 'SustainableProductsScreen',
-                  ),
+                  settings: const RouteSettings(name: 'SustainableProductsScreen'),
                 ),
-              ).then((_) {
-                // Reset index to 0 when returning to dashboard
-                setState(() {
-                  _currentIndex = 0;
-                });
-              });
+              ).then((_) => setState(() => _currentIndex = 0));
             }
           },
           items: [
@@ -195,7 +168,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 Icons.map_outlined,
                 color: isFishingBanActive ? Colors.grey.withOpacity(0.5) : null,
               ),
-              activeIcon: Icon(Icons.map),
+              activeIcon: const Icon(Icons.map),
               label: 'Map',
             ),
             BottomNavigationBarItem(
@@ -203,7 +176,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 Icons.add_circle_outline,
                 color: isFishingBanActive ? Colors.grey.withOpacity(0.5) : null,
               ),
-              activeIcon: Icon(Icons.add_circle),
+              activeIcon: const Icon(Icons.add_circle),
               label: 'Report',
             ),
             const BottomNavigationBarItem(
@@ -222,7 +195,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
       msg: "Fishing Ban Period: Feature Disabled",
       toastLength: Toast.LENGTH_LONG,
       gravity: ToastGravity.BOTTOM,
-      timeInSecForIosWeb: 3,
       backgroundColor: AppColors.error,
       textColor: Colors.white,
     );
